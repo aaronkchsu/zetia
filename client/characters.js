@@ -13,9 +13,8 @@ export class Character {
   }
 
   draw = (gameCtx) => {
-    const ctx = gameCtx;
-    ctx.fillStyle = "#000";
-    ctx.fillRect(this.x, this.y, this.width, this.height);
+    gameCtx.fillStyle = "#000";
+    gameCtx.fillRect(this.x, this.y, this.width, this.height);
   }
 }
 

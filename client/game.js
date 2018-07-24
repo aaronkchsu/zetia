@@ -14,6 +14,7 @@ class PandoGame extends React.Component {
     this.keysPressed = {};
     this.obstacles = [];
 
+
     document.body.addEventListener("keydown", (event) => {
       console.log("Key down checked", event.keyCode)
       if (event.keyCode === 32 && !this.gameStarted) {
@@ -34,15 +35,25 @@ class PandoGame extends React.Component {
 
   startGame = () => {
     this.gameStarted = true;
-    this.mainCharacter = new Character(50, 50);
-    this.mainCharacter.draw(this.gameCanvas.getContext("2d"))
-    return null;
+    this.mainCharacter = new Character(32, 32);
+    const ctx = this.gameCanvas.getContext("2d");
+    ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+    this.mainCharacter.draw(ctx)
   };
 
   endGame = () => {
     this.gameStarted = false;
     return null;
   };
+
+  moveCharacter = () => {
+    const nX = this.mainCharacter.x + 20;
+    const nY = this.mainCharacter.y + 20;
+    const ctx = this.gameCanvas.getContext("2d");
+    ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
+    this.mainCharacter.move(nX, nY)
+    this.mainCharacter.draw(ctx)
+  }
 
   resetGame = (ctx) => {
     ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
@@ -62,6 +73,7 @@ class PandoGame extends React.Component {
     return (
       <div>
         <h1>Pando Hop</h1>
+        <button onClick={this.moveCharacter}>{"move item"}</button>
         <canvas ref={this.setCanvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
       </div>
     );

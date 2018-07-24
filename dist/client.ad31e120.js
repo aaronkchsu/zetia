@@ -19771,9 +19771,8 @@ var Character = exports.Character = function Character(width, height) {
   };
 
   this.draw = function (gameCtx) {
-    var ctx = gameCtx;
-    ctx.fillStyle = "#000";
-    ctx.fillRect(_this.x, _this.y, _this.width, _this.height);
+    gameCtx.fillStyle = "#000";
+    gameCtx.fillRect(_this.x, _this.y, _this.width, _this.height);
   };
 
   this.speed = 256;
@@ -19869,14 +19868,24 @@ var PandoGame = function (_React$Component) {
 
     _this.startGame = function () {
       _this.gameStarted = true;
-      _this.mainCharacter = new _characters.Character(50, 50);
-      _this.mainCharacter.draw(_this.gameCanvas.getContext("2d"));
-      return null;
+      _this.mainCharacter = new _characters.Character(32, 32);
+      var ctx = _this.gameCanvas.getContext("2d");
+      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
+      _this.mainCharacter.draw(ctx);
     };
 
     _this.endGame = function () {
       _this.gameStarted = false;
       return null;
+    };
+
+    _this.moveCharacter = function () {
+      var nX = _this.mainCharacter.x + 20;
+      var nY = _this.mainCharacter.y + 20;
+      var ctx = _this.gameCanvas.getContext("2d");
+      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
+      _this.mainCharacter.move(nX, nY);
+      _this.mainCharacter.draw(ctx);
     };
 
     _this.resetGame = function (ctx) {
@@ -19926,6 +19935,11 @@ var PandoGame = function (_React$Component) {
           "h1",
           null,
           "Pando Hop"
+        ),
+        _react2.default.createElement(
+          "button",
+          { onClick: this.moveCharacter },
+          "move item"
         ),
         _react2.default.createElement("canvas", { ref: this.setCanvasRef, width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
       );
@@ -19992,7 +20006,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57856' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61712' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
