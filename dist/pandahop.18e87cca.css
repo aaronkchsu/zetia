@@ -1,0 +1,24 @@
+@keyframes morph {
+  0% {
+    stroke-dashoffset: 190%;
+  }
+
+  50% {
+    stroke-dashoffset: 50%;
+    transform: rotate(90deg);
+  }
+
+  100% {
+    stroke-dashoffset: 190%;
+    transform: rotate(360deg);
+  }
+}
+
+
+p {
+  color: white;
+}
+
+#root {
+  background-color: black;
+}
