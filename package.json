@@ -1,6 +1,6 @@
 {
   "name": "zetia",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "The official 404 not found canvas game",
   "main": "dist/index.js",
   "scripts": {
@@ -12,7 +12,14 @@
     "type": "git",
     "url": "https://github.com/aaronkchsu/zetia"
   },
-  "keywords": ["react", "html5", "parceljs", "game", "canvas", "keyboardhandlers"],
+  "keywords": [
+    "react",
+    "html5",
+    "parceljs",
+    "game",
+    "canvas",
+    "keyboardhandlers"
+  ],
   "author": "Aaron Kc Hsu",
   "license": "ISC",
   "dependencies": {
