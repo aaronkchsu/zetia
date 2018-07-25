@@ -10,7 +10,6 @@ export class Character {
   move = (dx, dy) => {
     this.x = this.x + dx;
     this.y = this.y + dy;
-    console.log('NEW X Y', this.x, " ", this.y)
   }
 
   draw = (gameCtx) => {

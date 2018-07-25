@@ -12,8 +12,8 @@
     "type": "git",
     "url": "https://github.com/aaronkchsu/zetia"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["react", "html5", "parceljs", "game", "canvas", "keyboardhandlers"],
+  "author": "Aaron Kc Hsu",
   "license": "ISC",
   "dependencies": {
     "react": "^16.4.1",
