@@ -1,12 +1,16 @@
 {
-  "name": "pandahop",
-  "version": "1.0.0",
-  "description": "",
+  "name": "zetia",
+  "version": "0.0.0",
+  "description": "The official 404 not found canvas game",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel index.html",
     "build": "parcel build client/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aaronkchsu/zetia"
   },
   "keywords": [],
   "author": "",

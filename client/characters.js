@@ -7,9 +7,10 @@ export class Character {
     this.y = 0;
   }
 
-  move = (x, y) => {
-    this.x = x;
-    this.y = y;
+  move = (dx, dy) => {
+    this.x = this.x + dx;
+    this.y = this.y + dy;
+    console.log('NEW X Y', this.x, " ", this.y)
   }
 
   draw = (gameCtx) => {

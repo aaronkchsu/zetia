@@ -14,21 +14,39 @@ class PandoGame extends React.Component {
     this.keysPressed = {};
     this.obstacles = [];
 
-
-    document.body.addEventListener("keydown", (event) => {
-      console.log("Key down checked", event.keyCode)
+    document.body.addEventListener("keydown", event => {
+      console.log("Key down checked", event.keyCode);
       if (event.keyCode === 32 && !this.gameStarted) {
         this.startGame();
       }
 
-      if(event.keyCode === 27) {
-        this.resetGame(this.gameCanvas.getContext("2d"));
+      if (this.gameStarted) {
+        if (event.keyCode === 37) {
+          this.moveCharacter(-10, 0);
+        }
+
+        if (event.keyCode === 38) {
+          this.moveCharacter(0, -10);
+        }
+
+        if (event.keyCode === 39) {
+          this.moveCharacter(10, 0);
+        }
+
+        if (event.keyCode === 40) {
+          this.moveCharacter(0, 10);
+        }
+
+        if (event.keyCode === 27) {
+          this.resetGame(this.gameCanvas.getContext("2d"));
+        }
       }
+
       this.keysPressed[event.keyCode] = true;
     });
 
-    document.body.addEventListener("keyup", (event) => {
-      console.log("Key up checked")
+    document.body.addEventListener("keyup", event => {
+      console.log("Key up checked");
       delete this.keysPressed[event.keyCode];
     });
   }
@@ -38,7 +56,7 @@ class PandoGame extends React.Component {
     this.mainCharacter = new Character(32, 32);
     const ctx = this.gameCanvas.getContext("2d");
     ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-    this.mainCharacter.draw(ctx)
+    this.mainCharacter.draw(ctx);
   };
 
   endGame = () => {
@@ -46,16 +64,15 @@ class PandoGame extends React.Component {
     return null;
   };
 
-  moveCharacter = () => {
-    const nX = this.mainCharacter.x + 20;
-    const nY = this.mainCharacter.y + 20;
+  moveCharacter = (dx, dy) => {
     const ctx = this.gameCanvas.getContext("2d");
     ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
-    this.mainCharacter.move(nX, nY)
-    this.mainCharacter.draw(ctx)
-  }
+    this.mainCharacter.move(dx, dy);
+    this.mainCharacter.draw(ctx);
+  };
 
-  resetGame = (ctx) => {
+  resetGame = ctx => {
+    this.gameStarted = false
     ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
     return null;
   };
@@ -65,16 +82,28 @@ class PandoGame extends React.Component {
     return null;
   };
 
-  setCanvasRef = (el) => {
+  setCanvasRef = el => {
     this.gameCanvas = el;
-  }
+  };
 
   render() {
     return (
-      <div>
+      <div style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center"
+      }}>
         <h1>Pando Hop</h1>
-        <button onClick={this.moveCharacter}>{"move item"}</button>
-        <canvas ref={this.setCanvasRef} width={CANVAS_WIDTH} height={CANVAS_HEIGHT} />
+        <canvas
+          ref={this.setCanvasRef}
+          width={CANVAS_WIDTH}
+          height={CANVAS_HEIGHT}
+          style={{
+            border: "3px",
+            borderStyle: "solid"
+          }}
+        />
       </div>
     );
   }

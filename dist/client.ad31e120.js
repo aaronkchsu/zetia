@@ -19765,9 +19765,10 @@ var Character = exports.Character = function Character(width, height) {
 
   _classCallCheck(this, Character);
 
-  this.move = function (x, y) {
-    _this.x = x;
-    _this.y = y;
+  this.move = function (dx, dy) {
+    _this.x = _this.x + dx;
+    _this.y = _this.y + dy;
+    console.log('NEW X Y', _this.x, " ", _this.y);
   };
 
   this.draw = function (gameCtx) {
@@ -19879,16 +19880,15 @@ var PandoGame = function (_React$Component) {
       return null;
     };
 
-    _this.moveCharacter = function () {
-      var nX = _this.mainCharacter.x + 20;
-      var nY = _this.mainCharacter.y + 20;
+    _this.moveCharacter = function (dx, dy) {
       var ctx = _this.gameCanvas.getContext("2d");
       ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
-      _this.mainCharacter.move(nX, nY);
+      _this.mainCharacter.move(dx, dy);
       _this.mainCharacter.draw(ctx);
     };
 
     _this.resetGame = function (ctx) {
+      _this.gameStarted = false;
       ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
       return null;
     };
@@ -19912,9 +19912,28 @@ var PandoGame = function (_React$Component) {
         _this.startGame();
       }
 
-      if (event.keyCode === 27) {
-        _this.resetGame(_this.gameCanvas.getContext("2d"));
+      if (_this.gameStarted) {
+        if (event.keyCode === 37) {
+          _this.moveCharacter(-10, 0);
+        }
+
+        if (event.keyCode === 38) {
+          _this.moveCharacter(0, -10);
+        }
+
+        if (event.keyCode === 39) {
+          _this.moveCharacter(10, 0);
+        }
+
+        if (event.keyCode === 40) {
+          _this.moveCharacter(0, 10);
+        }
+
+        if (event.keyCode === 27) {
+          _this.resetGame(_this.gameCanvas.getContext("2d"));
+        }
       }
+
       _this.keysPressed[event.keyCode] = true;
     });
 
@@ -19930,18 +19949,26 @@ var PandoGame = function (_React$Component) {
     value: function render() {
       return _react2.default.createElement(
         "div",
-        null,
+        { style: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center"
+          } },
         _react2.default.createElement(
           "h1",
           null,
           "Pando Hop"
         ),
-        _react2.default.createElement(
-          "button",
-          { onClick: this.moveCharacter },
-          "move item"
-        ),
-        _react2.default.createElement("canvas", { ref: this.setCanvasRef, width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
+        _react2.default.createElement("canvas", {
+          ref: this.setCanvasRef,
+          width: CANVAS_WIDTH,
+          height: CANVAS_HEIGHT,
+          style: {
+            border: "3px",
+            borderStyle: "solid"
+          }
+        })
       );
     }
   }]);
@@ -20006,7 +20033,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61712' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61849' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
