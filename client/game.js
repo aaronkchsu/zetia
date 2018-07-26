@@ -1,10 +1,14 @@
 import React from "react";
-import { Panda, Character } from "./characters";
+import { Panda, Character, Obstacle } from "./characters";
 
 let CANVAS_WIDTH = 480;
 let CANVAS_HEIGHT = 320;
 
 const pieces = [];
+
+const randomNumberBetween = (min, max) => {
+  return Math.floor( Math.random () * (max - min + 1) + min)
+}
 
 class PandoGame extends React.Component {
   constructor(props) {
@@ -15,7 +19,6 @@ class PandoGame extends React.Component {
     this.obstacles = [];
 
     document.body.addEventListener("keydown", event => {
-      console.log("Key down checked", event.keyCode);
       if (event.keyCode === 32 && !this.gameStarted) {
         this.startGame();
       }
@@ -53,11 +56,27 @@ class PandoGame extends React.Component {
 
   startGame = () => {
     this.gameStarted = true;
-    this.mainCharacter = new Character(32, 32);
+
+    this.mainCharacter = new Character({width: 32, height: 32});
     const ctx = this.gameCanvas.getContext("2d");
     ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
     this.mainCharacter.draw(ctx);
+
+    for(let i = 0; i < 10; i++) {
+      const randomNumberY = randomNumberBetween(0, CANVAS_HEIGHT);
+      const randomNumberX = randomNumberBetween(0, CANVAS_WIDTH);
+
+      this.obstacles.push(new Obstacle({ width: 32, height: 32, x: randomNumberX, y: randomNumberY }));
+    }
+
+    this.obstacles.forEach((obj) => {
+      obj.draw(ctx)
+    })
   };
+
+  moveObstacles = () => {
+
+  }
 
   endGame = () => {
     this.gameStarted = false;
@@ -69,6 +88,10 @@ class PandoGame extends React.Component {
     ctx.clearRect(0, 0, this.gameCanvas.width, this.gameCanvas.height);
     this.mainCharacter.move(dx, dy);
     this.mainCharacter.draw(ctx);
+
+    this.obstacles.forEach((obj) => {
+      obj.draw(ctx)
+    })
   };
 
   resetGame = ctx => {
