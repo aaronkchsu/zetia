@@ -1,3 +1,3 @@
-import { renderGameApp } from "./app";
+import { renderGameIntoDom } from "./index";
 
-renderGameApp("app")
+renderGameIntoDom("app")

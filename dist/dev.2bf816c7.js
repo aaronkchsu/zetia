@@ -20034,13 +20034,13 @@ var PandoGame = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = PandoGame;
-},{"react":"node_modules/react/index.js","./characters":"client/characters.js"}],"client/app.js":[function(require,module,exports) {
+},{"react":"node_modules/react/index.js","./characters":"client/characters.js"}],"client/index.js":[function(require,module,exports) {
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.renderGameApp = undefined;
+exports.renderGameIntoDom = exports.renderGameApp = undefined;
 
 var _react = require('react');
 
@@ -20056,17 +20056,21 @@ var _game2 = _interopRequireDefault(_game);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var renderGameApp = exports.renderGameApp = function renderGameApp() {
-  var AppRootElement = document.getElementById('app');
+var renderGameApp = exports.renderGameApp = function renderGameApp(domElementID) {
+  var AppRootElement = document.getElementById(domElementID);
   _reactDom2.default.render(_react2.default.createElement(_game2.default, null), AppRootElement);
+};
+
+var renderGameIntoDom = exports.renderGameIntoDom = function renderGameIntoDom(domElementID) {
+  renderGameApp(domElementID);
 };
 },{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./game.js":"client/game.js"}],"client/dev.js":[function(require,module,exports) {
 "use strict";
 
-var _app = require("./app");
+var _index = require("./index");
 
-(0, _app.renderGameApp)("app");
-},{"./app":"client/app.js"}],"../../.nvm/versions/node/v6.9.5/lib/node_modules/parcel-bundler/lib/builtins/hmr-runtime.js":[function(require,module,exports) {
+(0, _index.renderGameIntoDom)("app");
+},{"./index":"client/index.js"}],"../../.nvm/versions/node/v6.9.5/lib/node_modules/parcel-bundler/lib/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 
@@ -20095,7 +20099,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '55791' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61492' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
