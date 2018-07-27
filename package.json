@@ -1,6 +1,6 @@
 {
   "name": "zetia",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "The official 404 not found canvas game",
   "main": "dist/index.js",
   "scripts": {
