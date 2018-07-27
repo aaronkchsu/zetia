@@ -2,6 +2,10 @@
 
 The best things in life happen when we least expect it. So do the worst things.
 
+# Npm Package
+
+https://www.npmjs.com/package/zetia
+
 # Instructions
 
 Import the package using

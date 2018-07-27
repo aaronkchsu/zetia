@@ -19748,7 +19748,7 @@ if ('development' === 'production') {
   module.exports = require('./cjs/react-dom.development.js');
 }
 },{"./cjs/react-dom.development.js":"node_modules/react-dom/cjs/react-dom.development.js"}],"client/characters.js":[function(require,module,exports) {
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -19780,7 +19780,7 @@ var Character = exports.Character = function () {
     };
 
     this.draw = function (gameCtx) {
-      gameCtx.fillStyle = "#000";
+      gameCtx.fillStyle = '#008EE2';
       gameCtx.fillRect(_this.x, _this.y, _this.width, _this.height);
     };
 
@@ -19792,12 +19792,22 @@ var Character = exports.Character = function () {
   }
 
   _createClass(Character, [{
-    key: "getPosition",
+    key: 'getPosition',
     value: function getPosition() {
       return {
         x: this.x,
         y: this.y
       };
+    }
+  }, {
+    key: 'checkCollide',
+    value: function checkCollide(otherX, otherY, otherWidth, otherHeight) {
+      var BUFFER = 6;
+      if (otherX < this.x + this.width - BUFFER && otherX + otherWidth - BUFFER > this.x && otherY < this.y + this.height - BUFFER && otherHeight - BUFFER + otherY > this.y) {
+        return true;
+      } else {
+        return false;
+      }
     }
   }]);
 
@@ -19812,7 +19822,8 @@ var Obstacle = exports.Obstacle = function (_Character) {
         y = _ref2.y,
         width = _ref2.width,
         height = _ref2.height,
-        speed = _ref2.speed;
+        speed = _ref2.speed,
+        goingLeft = _ref2.goingLeft;
 
     _classCallCheck(this, Obstacle);
 
@@ -19820,55 +19831,62 @@ var Obstacle = exports.Obstacle = function (_Character) {
 
     _this2.draw = function (gameCtx) {
       var ctx = gameCtx;
-      ctx.fillStyle = "#000";
+      ctx.fillStyle = '#8B969E';
       ctx.fillRect(_this2.x, _this2.y, _this2.width, _this2.height);
     };
 
-    _this2.move = function (dx, dy) {
-      _this2.x = _this2.x + dx;
-      _this2.y = _this2.y + dy;
+    _this2.move = function () {
+      if (_this2.goingLeft) {
+        _this2.x = _this2.x - _this2.speed;
+      } else {
+        _this2.x = _this2.x + _this2.speed;
+      }
     };
 
+    _this2.goingLeft = goingLeft || false;
     return _this2;
   }
-
-  _createClass(Obstacle, [{
-    key: "checkCollide",
-    value: function checkCollide(otherX, otherY) {
-      var xMax = this.x + this.width;
-      var yMax = this.y + this.height;
-
-      if (this.x > otherX && otherX < xMax && y > this.y && y < yMax) {
-        return true;
-      } else {
-        return false;
-      }
-    }
-  }]);
 
   return Obstacle;
 }(Character);
 
-var Panda = exports.Panda = function (_Character2) {
-  _inherits(Panda, _Character2);
+var GoalObject = exports.GoalObject = function (_Character2) {
+  _inherits(GoalObject, _Character2);
 
-  function Panda(width, height) {
-    _classCallCheck(this, Panda);
+  function GoalObject(_ref3) {
+    var x = _ref3.x,
+        y = _ref3.y,
+        width = _ref3.width,
+        height = _ref3.height,
+        speed = _ref3.speed,
+        goingLeft = _ref3.goingLeft;
 
-    var _this3 = _possibleConstructorReturn(this, (Panda.__proto__ || Object.getPrototypeOf(Panda)).call(this, width, height));
+    _classCallCheck(this, GoalObject);
 
-    _this3.draw = function () {};
+    var _this3 = _possibleConstructorReturn(this, (GoalObject.__proto__ || Object.getPrototypeOf(GoalObject)).call(this, { width: width, height: height, x: x, y: y, speed: speed }));
 
-    _this3.speed = 256;
-    _this3.x = 0;
-    _this3.y = 0;
+    _this3.draw = function (gameCtx) {
+      var ctx = gameCtx;
+      ctx.fillStyle = '#00AC18';
+      ctx.fillRect(_this3.x, _this3.y, _this3.width, _this3.height);
+    };
+
+    _this3.move = function () {
+      if (_this3.goingLeft) {
+        _this3.x = _this3.x - _this3.speed;
+      } else {
+        _this3.x = _this3.x + _this3.speed;
+      }
+    };
+
+    _this3.goingLeft = goingLeft || false;
     return _this3;
   }
 
-  return Panda;
+  return GoalObject;
 }(Character);
 },{}],"client/game.js":[function(require,module,exports) {
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -19876,11 +19894,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _react = require("react");
+var _react = require('react');
 
 var _react2 = _interopRequireDefault(_react);
 
-var _characters = require("./characters");
+var _characters = require('./characters');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -19888,12 +19906,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /*
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Copyright (C) 2018 - present Instructure, Inc.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * This file is part of Canvas.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Canvas is free software: you can redistribute it and/or modify it under
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * the terms of the GNU Affero General Public License as published by the Free
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Software Foundation, version 3 of the License.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * Canvas is distributed in the hope that it will be useful, but WITHOUT ANY
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * details.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * You should have received a copy of the GNU Affero General Public License along
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * with this program. If not, see <http://www.gnu.org/licenses/>.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
 
-var CANVAS_WIDTH = 480;
-var CANVAS_HEIGHT = 320;
-
-var pieces = [];
+var CANVAS_WIDTH = 180;
+var CANVAS_HEIGHT = 720;
+var GOAL_REACHED_SCORE = 13146;
+var MAIN_CHAR_LENGTH = 32;
 
 var randomNumberBetween = function randomNumberBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -19907,123 +19941,244 @@ var PandoGame = function (_React$Component) {
 
     var _this = _possibleConstructorReturn(this, (PandoGame.__proto__ || Object.getPrototypeOf(PandoGame)).call(this, props));
 
+    _this.setCanvasRef = function (el) {
+      _this.gameCanvas = el;
+    };
+
+    _this.restartGame = function () {
+      _this.startGame();
+    };
+
     _this.startGame = function () {
       _this.gameStarted = true;
+      _this.setState({ gameTimer: 0 });
 
-      _this.mainCharacter = new _characters.Character({ width: 32, height: 32 });
-      var ctx = _this.gameCanvas.getContext("2d");
+      // This puts the positions
+      _this.resetCharacters();
+
+      // Starts the event loop at 30 ms
+      _this.gameLoop = setInterval(_this.eventGameFrameLoop, 30);
+    };
+
+    _this.resetCharacters = function () {
+      _this.mainCharacter = new _characters.Character({
+        width: MAIN_CHAR_LENGTH,
+        height: MAIN_CHAR_LENGTH,
+        x: CANVAS_WIDTH / 2 - MAIN_CHAR_LENGTH / 2,
+        y: CANVAS_HEIGHT - MAIN_CHAR_LENGTH
+      });
+
+      var ctx = _this.gameCanvas.getContext('2d');
       ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
+
       _this.mainCharacter.draw(ctx);
 
-      for (var i = 0; i < 10; i++) {
-        var randomNumberY = randomNumberBetween(0, CANVAS_HEIGHT);
-        var randomNumberX = randomNumberBetween(0, CANVAS_WIDTH);
-
-        _this.obstacles.push(new _characters.Obstacle({ width: 32, height: 32, x: randomNumberX, y: randomNumberY }));
-      }
-
-      _this.obstacles.forEach(function (obj) {
-        obj.draw(ctx);
+      _this.goalObject = new _characters.GoalObject({
+        width: MAIN_CHAR_LENGTH,
+        height: MAIN_CHAR_LENGTH,
+        x: randomNumberBetween(0, CANVAS_WIDTH - MAIN_CHAR_LENGTH),
+        y: 0
       });
     };
 
-    _this.moveObstacles = function () {};
+    _this.goalReached = function () {
+      _this.setState({ gameTimer: _this.state.gameTimer + GOAL_REACHED_SCORE });
+      _this.resetCharacters();
+    };
 
-    _this.endGame = function () {
-      _this.gameStarted = false;
-      return null;
+    _this.createObstacle = function () {
+      var obstacleWidth = 20;
+      var rightOrLeft = randomNumberBetween(0, 5);
+
+      var placedY = randomNumberBetween(0, CANVAS_HEIGHT - (MAIN_CHAR_LENGTH + 40));
+      var placedX = randomNumberBetween(0, CANVAS_WIDTH);
+
+      if (rightOrLeft > 3) {
+        placedX = CANVAS_WIDTH - obstacleWidth;
+      } else {
+        placedX = 0;
+      }
+
+      _this.obstacles.push(new _characters.Obstacle({
+        speed: randomNumberBetween(1, 9),
+        width: obstacleWidth,
+        height: obstacleWidth,
+        x: placedX,
+        y: placedY,
+        goingLeft: rightOrLeft > 3
+      }));
     };
 
     _this.moveCharacter = function (dx, dy) {
-      var ctx = _this.gameCanvas.getContext("2d");
-      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
       _this.mainCharacter.move(dx, dy);
+    };
+
+    _this.playerController = function () {
+      var playerMovement = 8;
+      if (_this.gameStarted) {
+        if (_this.keysPressed[37]) {
+          if (_this.mainCharacter.x >= 0) {
+            _this.moveCharacter(-playerMovement, 0);
+          }
+        }
+
+        if (_this.keysPressed[38]) {
+          if (_this.mainCharacter.y >= 0) {
+            _this.moveCharacter(0, -playerMovement);
+          }
+        }
+
+        if (_this.keysPressed[39]) {
+          if (_this.mainCharacter.x + MAIN_CHAR_LENGTH <= CANVAS_WIDTH) {
+            _this.moveCharacter(playerMovement, 0);
+          }
+        }
+
+        if (_this.keysPressed[40]) {
+          if (_this.mainCharacter.y + MAIN_CHAR_LENGTH <= CANVAS_HEIGHT) {
+            _this.moveCharacter(0, playerMovement);
+          }
+        }
+      }
+    };
+
+    _this.endGame = function (ctx) {
+      clearInterval(_this.gameLoop);
+      _this.gameStarted = false;
+      _this.obstacles = [];
+      _this.mainCharacter = null;
+      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
+    };
+
+    _this.eventGameFrameLoop = function () {
+      if (!_this.gameStarted) {
+        return false;
+      }
+      _this.setState({ gameTimer: _this.state.gameTimer + 1 });
+
+      var ctx = _this.gameCanvas.getContext('2d');
+      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
+
+      // Controls Player Movement
+      _this.playerController();
+
       _this.mainCharacter.draw(ctx);
 
-      _this.obstacles.forEach(function (obj) {
-        obj.draw(ctx);
-      });
-    };
+      _this.goalObject.draw(ctx);
 
-    _this.resetGame = function (ctx) {
-      _this.gameStarted = false;
-      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
+      if (_this.goalObject.checkCollide(_this.mainCharacter.x, _this.mainCharacter.y, MAIN_CHAR_LENGTH, MAIN_CHAR_LENGTH)) {
+        _this.goalReached();
+      }
+
+      var shouldGenerateObstacle = randomNumberBetween(0, 26) > 20;
+      if (shouldGenerateObstacle) {
+        _this.createObstacle();
+      }
+
+      for (var i = 0; i < _this.obstacles.length; i++) {
+        var currentObs = _this.obstacles[i];
+        currentObs.move();
+        if (currentObs.checkCollide(_this.mainCharacter.x, _this.mainCharacter.y, MAIN_CHAR_LENGTH, MAIN_CHAR_LENGTH)) {
+          _this.endGame(ctx);
+          return null;
+        }
+        currentObs.draw(ctx);
+      }
+
+      // this.obstacles = this.obstacles.filter(obs => this.checkInArena(obs.x, obs.y))
       return null;
     };
 
-    _this.updateFrame = function () {
-      ctx.clearRect(0, 0, _this.gameCanvas.width, _this.gameCanvas.height);
-      return null;
-    };
-
-    _this.setCanvasRef = function (el) {
-      _this.gameCanvas = el;
+    _this.state = {
+      gameTimer: 0
     };
 
     _this.gameStarted = false;
     _this.keysPressed = {};
     _this.obstacles = [];
+    _this.gameLoop = null;
+    _this.goalObject = null;
 
-    document.body.addEventListener("keydown", function (event) {
+    document.body.addEventListener('keydown', function (event) {
       if (event.keyCode === 32 && !_this.gameStarted) {
         _this.startGame();
       }
 
-      if (_this.gameStarted) {
-        if (event.keyCode === 37) {
-          _this.moveCharacter(-10, 0);
-        }
-
-        if (event.keyCode === 38) {
-          _this.moveCharacter(0, -10);
-        }
-
-        if (event.keyCode === 39) {
-          _this.moveCharacter(10, 0);
-        }
-
-        if (event.keyCode === 40) {
-          _this.moveCharacter(0, 10);
-        }
-
-        if (event.keyCode === 27) {
-          _this.resetGame(_this.gameCanvas.getContext("2d"));
-        }
+      if (event.keyCode === 27 && _this.gameStarted) {
+        _this.endGame(_this.gameCanvas.getContext('2d'));
       }
 
       _this.keysPressed[event.keyCode] = true;
+
+      // Prevent default
+      if ([32, 37, 38, 39, 40].indexOf(event.keyCode) > -1) {
+        event.preventDefault();
+      }
     });
 
-    document.body.addEventListener("keyup", function (event) {
-      console.log("Key up checked");
+    document.body.addEventListener('keyup', function (event) {
       delete _this.keysPressed[event.keyCode];
     });
     return _this;
   }
 
   _createClass(PandoGame, [{
-    key: "render",
+    key: 'componentDidMount',
+    value: function componentDidMount() {
+      if (!this.gameStarted) {
+        this.startGame();
+      }
+    }
+  }, {
+    key: 'checkInArena',
+    value: function checkInArena(x, y) {
+      var buffer = 100;
+      if (x > -buffer && x < this.CANVAS_WIDTH + buffer && y > -buffer && y < this.CANVAS_HEIGHT + buffer) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: 'render',
     value: function render() {
       return _react2.default.createElement(
-        "div",
-        { style: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center"
-          } },
+        'div',
+        {
+          className: 'not_found_page_game_root',
+          style: {
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }
+        },
         _react2.default.createElement(
-          "h1",
-          null,
-          "Pando Hop"
+          'div',
+          {
+            style: {
+              fontSize: '20px',
+              padding: '4px',
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end'
+            }
+          },
+          _react2.default.createElement(
+            'div',
+            null,
+            'Score: ' + this.state.gameTimer
+          )
         ),
-        _react2.default.createElement("canvas", {
+        _react2.default.createElement('canvas', {
           ref: this.setCanvasRef,
           width: CANVAS_WIDTH,
           height: CANVAS_HEIGHT,
           style: {
-            border: "3px",
-            borderStyle: "solid"
+            border: '2px',
+            borderStyle: 'solid',
+            borderColor: '#394B58'
           }
         })
       );
@@ -20056,13 +20211,13 @@ var _game2 = _interopRequireDefault(_game);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var renderGameApp = exports.renderGameApp = function renderGameApp(domElementID) {
-  var AppRootElement = document.getElementById(domElementID);
+var renderGameApp = exports.renderGameApp = function renderGameApp(domElement) {
+  var AppRootElement = document.getElementById(domElement);
   _reactDom2.default.render(_react2.default.createElement(_game2.default, null), AppRootElement);
 };
 
-var renderGameIntoDom = exports.renderGameIntoDom = function renderGameIntoDom(domElementID) {
-  renderGameApp(domElementID);
+var renderGameIntoDom = exports.renderGameIntoDom = function renderGameIntoDom(domElement) {
+  renderGameApp(domElement);
 };
 },{"react":"node_modules/react/index.js","react-dom":"node_modules/react-dom/index.js","./game.js":"client/game.js"}],"client/dev.js":[function(require,module,exports) {
 "use strict";
@@ -20099,7 +20254,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '61492' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '62496' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
